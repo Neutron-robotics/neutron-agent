@@ -44,7 +44,7 @@ class Core:
             processId = self.process_manager.make_process(
                 part.get("name"),
                 command,
-                "/home/hugoperier/projects/My-robotic/packages",
+                ".",
                 part.get("id"),
                 part.get("initializer", None),
                 True
