@@ -2,10 +2,10 @@
     "name": "",
     "type": "",
     "port": 8000,
+    "neutronCoreUri": "http://192.168.1.121:3003",
     "logDirectory": "",
     "context": {
-        "type": "Rosbridge",
-        "port": 9090
+        "type": "ros2"
     },
     "parts": [
         {

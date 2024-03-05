@@ -1,0 +1,12 @@
+{
+    "type": "ros2",
+    "process": {
+        "id": "c0b1b0a1-1b1a-4b1a-9b1a-1b1a0b1a1b1a",
+        "port": 9090,
+        "name": "Rosbridge",
+        "type": "Rosbridge",
+        "command": "ros2 launch rosbridge_server rosbridge_websocket_launch.xml",
+        "path": ".",
+        "initializer": "Rosbridge WebSocket server started"
+    }
+}

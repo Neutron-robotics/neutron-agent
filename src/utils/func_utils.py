@@ -2,15 +2,15 @@ import json
 import os
 import time
 
-MYROBOTICS_ROOT = "MYROBOTICS_ROOT"
+NEUTRON_ROOT = "NEUTRON_ROOT"
 
 def load_configuration(path, with_prefix=True):
 	prefix = ""
 	if with_prefix:
-		prefix = os.environ.get(MYROBOTICS_ROOT, "")
+		prefix = os.environ.get(NEUTRON_ROOT, "")
 		if (prefix == ""):
-			print("MYROBOTICS_ROOT environment variable not set")
-			raise Exception("MYROBOTICS_ROOT environment variable not set")
+			print("NEUTRON_ROOT environment variable not set")
+			raise Exception("NEUTRON_ROOT environment variable not set")
 	file_path = os.path.join(prefix, path)
 	
 	if not (os.access(file_path, os.F_OK)):

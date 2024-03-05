@@ -182,7 +182,6 @@ class Core:
 
     def pull_configuration(self, configuration):
         print("Pulling new configuration", configuration)
-        self.configuration["context"] = configuration["name"]
         self.configuration["context"] = configuration["context"]
         self.configuration["parts"] = configuration["parts"]
         self.configuration["name"] = configuration["name"]
@@ -191,11 +190,11 @@ class Core:
 
     def update_configuration(self):
         try:
-            myrobotics_root = os.environ.get("MYROBOTICS_ROOT")
-            if not myrobotics_root:
-                raise ValueError("MYROBOTICS_ROOT environment variable not set")
+            neutron_root = os.environ.get("NEUTRON_ROOT")
+            if not neutron_root:
+                raise ValueError("NEUTRON_ROOT environment variable not set")
 
-            config_path = os.path.join(myrobotics_root, "core.json")
+            config_path = os.path.join(neutron_root, "neutron.json")
 
             with open(config_path, "w") as config_file:
                 json.dump(self.configuration, config_file, indent=4)
