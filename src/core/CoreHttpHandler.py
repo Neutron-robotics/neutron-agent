@@ -1,4 +1,4 @@
-from modules.utils.HttpRequestHandler import HttpRequestHandler
+from utils.HttpRequestHandler import HttpRequestHandler
 import json
 
 class CoreHttpHandler(HttpRequestHandler):
