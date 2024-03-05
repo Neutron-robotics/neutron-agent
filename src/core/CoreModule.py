@@ -1,5 +1,5 @@
-from modules.utils.ProcessManager import ProcessManager
-from modules.utils.func_utils import load_configuration, get_time
+from utils.ProcessManager import ProcessManager
+from utils.func_utils import load_configuration, get_time
 import psutil
 import os
 import json
