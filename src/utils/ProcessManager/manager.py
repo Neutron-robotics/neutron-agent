@@ -65,7 +65,8 @@ class ProcessManager:
         """Stop a proces"""
         for process in self.processes:
             if process.id == id:
-                process.kill()
+                if (process.pid != -1):
+                    process.kill()
                 if flush:
                     self.rem_process(process)
                 return True
