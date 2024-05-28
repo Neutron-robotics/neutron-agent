@@ -122,8 +122,6 @@ class Core:
         while not self.stop_event.is_set():
             # Perform the status update
             self.send_robot_status()
-
-            # Sleep for 200 seconds
             time.sleep(200)
 
     def stop_status_thread(self):
@@ -173,7 +171,7 @@ class Core:
             if (body.get("configuration")):
                 self.pull_configuration(body["configuration"])
             if (response.status_code != 200):
-                print("Error while publishing robot status")
+                print("An error has occured while publishing robot status")
                 print(response.text)
         except Exception as e:
             print("[CORE] Error sending robot status")
@@ -199,10 +197,10 @@ class Core:
             with open(config_path, "w") as config_file:
                 json.dump(self.configuration, config_file, indent=4)
 
-            print(f"[CORE] Configuration updated and saved to {config_path}")
+            print(f"Configuration updated and saved to {config_path}")
 
         except Exception as e:
-            print("[CORE] Error updating configuration")
+            print("Error updating configuration")
             print(str(e))
 
 
