@@ -3,10 +3,32 @@ from utils.func_utils import load_configuration
 from utils.threaded_http_server import ThreadedHTTPServer
 from core.CoreHttpHandler import CoreHttpHandler
 from core.CoreModule import Core
+from core.install import create_install_path, copy_configuration, update_bashrc, add_neutron_alias
 import requests
 import time
 import os
-import shutil
+import subprocess
+
+def run_setup_script():
+    neutron_root = os.getenv('NEUTRON_ROOT')
+    
+    if not neutron_root:
+        print("Error: NEUTRON_ROOT environment variable is not set.")
+        return
+
+    setup_script_path = os.path.join(neutron_root, 'setup.sh')
+    if not os.path.exists(setup_script_path):
+        print(f"Error: setup.sh script not found at {setup_script_path}.")
+        return
+
+    try:
+        subprocess.run(['bash', setup_script_path], check=True)
+        print(f"Successfully ran {setup_script_path}.")
+    except subprocess.CalledProcessError as e:
+        print(f"Error running setup script: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+
 
 def run_server(configuration):
     port = configuration.get("port")
@@ -38,45 +60,16 @@ def custom_link_function(configuration):
         print(f"Error linking: {response.text}")
 
 def install_neutron():
-    install_path = input("Enter folder installation path (~/.neutron):").strip()
-    if not install_path:
-        install_path = os.path.expanduser("~/.neutron")
-
-    # Check if the install path already exists
-    if os.path.exists(install_path):
-        response = input(f"The installation path '{install_path}' already exists. Do you want to continue? (y/n): ").strip().lower()
-        if response != 'y':
-            print("Installation aborted.")
-            return
-    
-    config_base_path = './configuration/'
-    config_files = ['neutron.json', 'contexts/ros2.json']
-    for file in config_files:
-        if not os.path.exists(os.path.join(config_base_path, file)):
-            print(f"Error: Configuration file '{file}' not found in '{config_base_path}'.")
-            return
+    repo_path = os.path.abspath(os.path.dirname(__file__))
 
     try:
-        os.makedirs(install_path, exist_ok=True)
-        os.makedirs(os.path.join(install_path, 'contexts'), exist_ok=True)
-        for file in config_files:
-            source = os.path.join(config_base_path, file)
-            if 'contexts' in file:  # Check if the file is inside the 'contexts' directory
-                destination = os.path.join(install_path, file)
-            else:
-                destination = install_path
-            shutil.copy(source, destination)
+        install_path = create_install_path()
+        copy_configuration(install_path)
+        update_bashrc(install_path)
+        add_neutron_alias(repo_path)
     except Exception as e:
-        print(f"Error copying configuration files: {e}")
+        print(e)
         return
-
-    try:
-        with open(os.path.expanduser('~/.bashrc'), 'a') as f:
-            f.write(f'\nexport NEUTRON_ROOT="{install_path}"\n')
-        print("NEUTRON_ROOT has been saved in .bashrc")
-    except Exception as e:
-        print(f"Error adding environment variable to .bashrc: {e}")
-
 
 def custom_status_function(configuration):
     core = Core(configuration, True)
@@ -116,6 +109,7 @@ if __name__ == '__main__':
     elif args.run:
         print("Starting neutron agent")
         configuration = load_configuration("neutron.json")
+        run_setup_script()
         run_server(configuration)
     elif args.link:
         configuration = load_configuration("neutron.json")
